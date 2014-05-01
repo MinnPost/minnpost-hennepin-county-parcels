@@ -1,0 +1,31 @@
+<div class="application-container">
+  <div class="message-container"></div>
+
+  <div class="content-container">
+
+    <div class="component-label">Hennepin County parcels</div>
+
+    <div class="caption">Here is an awesome, concise caption.</div>
+
+    <div class="caption legend">
+      <ul>
+        <% _.each(legend, function(l, li) { %>
+          <li><span class="inline-block" style="background-color: <%= li %>"></span> <%= l %></li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <div class="map" id="h-county-parcels">
+    </div>
+
+  </div>
+
+  <div class="footnote-container">
+    <div class="footnote">
+      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-hennepin-county-parcels" target="_blank">Github</a>.</p>
+
+        <p>Some map data © OpenStreetMap contributors; licensed under the <a href="http://www.openstreetmap.org/copyright" target="_blank">Open Data Commons Open Database License</a>.  Some map design © MapBox; licensed according to the <a href="http://mapbox.com/tos/" target="_blank">MapBox Terms of Service</a>.  Location geocoding provided by <a href="http://www.mapquest.com/" target="_blank">Mapquest</a> and is not guaranteed to be accurate.</p>
+
+    </div>
+  </div>
+</div>

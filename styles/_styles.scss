@@ -1,0 +1,44 @@
+/**
+ * Main styles for: minnpost-hennepin-county-parcels
+ */
+
+// This makes the unpublished background not as annoying
+body .node-unpublished {
+  background-repeat: no-repeat;
+}
+
+// Wrap everything for specificity
+.mp .minnpost-hennepin-county-parcels-container {
+
+  .application-container {
+    padding-top: 1em;
+  }
+
+  .legend {
+    text-align: center;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: inline;
+        margin: 0 1em .5em 0;
+
+        span {
+          width: 1.25em;
+          height: 1.25em;
+          vertical-align: middle;
+          margin-right: .25em;
+          border-radius: .1em;
+        }
+      }
+    }
+  }
+
+
+  // Custom breakpoints
+  @media screen and (max-width: 768px) {
+  }
+}
