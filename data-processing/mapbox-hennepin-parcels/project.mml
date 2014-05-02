@@ -13,14 +13,22 @@
   "format": "png8",
   "interactivity": {
     "layer": "parcels",
-    "template_teaser": "{{^MKT_VAL_TO}}\n<div class=“market-value”>No estimated market value found.</div>\n{{/MKT_VAL_TO}}\n{{#MKT_VAL_TO}}\n<div class=“market-value\">Total market value: {{{MKT_VAL_TO}}}</div>\n{{/MKT_VAL_TO}}\n",
+    "template_teaser": "{{^MKT_VAL_TO}}\n<div class=“market-value”>No estimated market value found.</div>\n{{/MKT_VAL_TO}}\n{{#MKT_VAL_TO}}\n<div class=“market-value\\\">Total market value: {{{MKT_VAL_TO}}}</div>\n{{/MKT_VAL_TO}}\n\n{{#BUILD_YR}}\n<div class=“year-built\\\">Year built: {{{BUILD_YR}}}</div>\n{{/BUILD_YR}}\n\n{{#EST_LAND_M}}\n<div class=“land-value\\\">Land value: {{{EST_LAND_M}}}</div>\n{{/EST_LAND_M}}\n\n{{#EST_BLDG_M}}\n<div class=“bldg-value\\\">Building value: {{{EST_BLDG_M}}}</div>\n{{/EST_BLDG_M}}\n\n{{#PROPERTY_T}}\n<div class=“prop-type\\\">Type: {{{PROPERTY_T}}}</div>\n{{/PROPERTY_T}}\n\n{{#HMSTD_CD1_}}\n<div class=“home”>Homestead status: {{{HMSTD_CD1_}}}</div>\n{{/HMSTD_CD1_}}\n\n{{#STREET_NM}}\n<br>\n<div class=“street”>{{{STREET_NM}}}, {{{MUNIC_NM}}}, {{{ZIP_CD}}}</div>\n{{/STREET_NM}}",
     "template_full": "",
     "fields": [
-      "MKT_VAL_TO"
+      "MKT_VAL_TO",
+      "BUILD_YR",
+      "EST_LAND_M",
+      "EST_BLDG_M",
+      "PROPERTY_T",
+      "HMSTD_CD1_",
+      "STREET_NM",
+      "MUNIC_NM",
+      "ZIP_CD"
     ]
   },
   "minzoom": 10,
-  "maxzoom": 15,
+  "maxzoom": 16,
   "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
   "Stylesheet": [
     "style.mss"
