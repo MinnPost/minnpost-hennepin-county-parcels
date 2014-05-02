@@ -32,35 +32,50 @@ define('minnpost-hennepin-county-parcels', [
       // Create main application view
       this.$el.html(_.template(tApplication, {
         legend: {
-          '#55307e': '> 0',
-          '#8e71a8': '> 100,000',
-          '#c6b6d3': '> 250,000',
-          '#b9d9bf': '> 500,000',
-          '#74b281': '> 1,000,000',
-          '#1d8c47': '> 3,000,000'
+          '#F1F1F1': '$0 or no data.',
+          '#55307e': '$0 - $100k',
+          '#8e71a8': '$100k - $250k',
+          '#c6b6d3': '$250k - $500',
+          '#b9d9bf': '$500 - $1M',
+          '#74b281': '$1M - $3M',
+          '#1d8c47': 'above $3M'
         }
       }));
 
-      // Add map
-      L.mapbox.config.HTTP_URLS = ['http://ec2-54-82-59-19.compute-1.amazonaws.com:9000/v2/'];
+      this.makeMap();
+      this.handleEvents();
+    },
 
-      var map = L.mapbox.map('h-county-parcels', 'hennepin-parcels', {
+    // Put together map
+    makeMap: function() {
+      // Base urls.  We our using a temporary Tilestream server, so we override
+      // what Mapbox usually expects
+      var tilestream_base = '//ec2-54-82-59-19.compute-1.amazonaws.com:9000/v2/';
+      var mapbox_base = '//{s}.tiles.mapbox.com/v3/';
+      var thisApp = this;
+
+      // Override urls for Mapbox
+      L.mapbox.config.HTTP_URLS = [tilestream_base];
+
+      // Make base map
+      this.map = L.mapbox.map('h-county-parcels', 'hennepin-parcels', {
         minZoom: 10,
         maxZoom: 15
       });
-      map.removeControl(map.infoControl);
+      // Remove mapbox control
+      this.map.removeControl(this.map.infoControl);
 
-      var base = new L.tileLayer('//{s}.tiles.mapbox.com/v3/minnpost.map-dotjndlk/{z}/{x}/{y}.png?update=xxxx', {
+      // Add street overlay
+      L.tileLayer(mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png?update=xxxx', {
         zIndex: 100,
         minZoom: 12,
         maxZoom: 15
-      });
-      map.addLayer(base);
+      }).addTo(this.map);
 
-      var under = new L.tileLayer('//{s}.tiles.mapbox.com/v3/minnpost.map-vhjzpwel/{z}/{x}/{y}.png?update=xxxx', {
+      // Add terrain underlay
+      L.tileLayer(mapbox_base + 'minnpost.map-vhjzpwel/{z}/{x}/{y}.png?update=xxxx', {
         zIndex: -100
-      });
-      map.addLayer(under);
+      }).addTo(this.map);
 
       /*
         .setView([40, -74.50], 9);
@@ -69,6 +84,37 @@ define('minnpost-hennepin-county-parcels', [
       var myGridLayer = L.mapbox.gridLayer('minnpost.fec-mn-2012-q1-dots').addTo(map);
       var myGridControl = L.mapbox.gridControl(myGridLayer).addTo(map);
       */
+
+      // For whatever reason, the map may not load complete, probably
+      // due to the face that the DOM element for it is not
+      // completely loaded
+      _.delay(function() {
+        thisApp.map.invalidateSize();
+      }, 750);
+    },
+
+    // Handle some events
+    handleEvents: function() {
+      var thisApp = this;
+      var places = {
+        'harriet': {
+          loc: [44.92236863873383, -93.30546547367703],
+          zoom: 14
+        },
+        'ids': {
+          loc: [44.97611437647188, -93.27250648930203],
+          zoom: 15
+        }
+      };
+
+      this.$el.find('.location-link').on('click', function(e) {
+        e.preventDefault();
+        var place = $(this).data('location');
+        if (_.isObject(places[place])) {
+          thisApp.map.setView(places[place].loc, places[place].zoom);
+        }
+      });
+
     },
 
 
@@ -79,7 +125,6 @@ define('minnpost-hennepin-county-parcels', [
       el: '.minnpost-hennepin-county-parcels-container',
       availablePaths: {
         local: {
-
           css: ['.tmp/css/main.css'],
           images: 'images/',
           data: 'data/'
@@ -99,12 +144,10 @@ define('minnpost-hennepin-county-parcels', [
         },
         deploy: {
           css: [
-            '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css',
-            'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/minnpost-hennepin-county-parcels.libs.min.css',
+            '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css',  'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/minnpost-hennepin-county-parcels.libs.min.css',
             'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/minnpost-hennepin-county-parcels.latest.min.css'
           ],
-          ie: [
-            'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/minnpost-hennepin-county-parcels.libs.min.ie.css',
+          ie: [  'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/minnpost-hennepin-county-parcels.libs.min.ie.css',
             'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/minnpost-hennepin-county-parcels.latest.min.ie.css'
           ],
           images: 'https://s3.amazonaws.com/data.minnpost/projects/minnpost-hennepin-county-parcels/images/',

@@ -5,12 +5,12 @@
 
     <div class="component-label">Hennepin County parcels</div>
 
-    <div class="caption">Here is an awesome, concise caption.</div>
+    <div class="caption">The map below shows the estimated market value of most all the parcels in Hennepin County.  Hover over (or tap on a mobile device) to see some more information about the parcel.  Check out the <a href="#" data-location="harriet" class="location-link">expensive houses around Lake Harriet</a>, or the <a href="#" data-location="ids" class="location-link">very expensive downtown Minneapolis</a> (with the IDS Center taking the most expensive at $193M).</div>
 
     <div class="legend caption">
       <ul>
         <% _.each(legend, function(l, li) { %>
-          <li><span class="inline-block" style="background-color: <%= li %>"></span> <%= l %></li>
+          <li class="inline-block"><span class="inline-block" style="background-color: <%= li %>"></span> <%= l %></li>
         <% }) %>
       </ul>
     </div>
