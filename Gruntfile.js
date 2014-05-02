@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       files: ['Gruntfile.js', 'js/*.js', 'data-processing/*.js']
     },
 
-    
+
     // Compass is an extended SASS.  Set it up so that it generates to .tmp/
     compass: {
       options: {
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
 
     // Copy relevant files over to distribution
     copy: {
@@ -138,7 +138,7 @@ module.exports = function(grunt) {
         options: {
           // Include just libraries
           include: _.compact(_.flatten(_.pluck(_.filter(components, function(c) { return (c.js !== undefined); }), 'rname'))),
-          exclude: ['requirejs'],
+          exclude: ['almond'],
           baseUrl: 'js',
           mainConfigFile: 'js/config.js',
           out: 'dist/<%= pkg.name %>.libs.js',
@@ -152,8 +152,8 @@ module.exports = function(grunt) {
       embed: {
         options: {
           name: '<%= pkg.name %>',
-          include: ['almond'],
-          exclude: ['requirejs'],
+          include: ['requirejs'],
+          exclude: ['almond'],
           baseUrl: 'js',
           mainConfigFile: 'js/config.js',
           out: 'dist/<%= pkg.name %>.embed.latest.js',
@@ -185,7 +185,7 @@ module.exports = function(grunt) {
       // CSS
       css: {
         src: [
-          
+
           '<%= compass.dist.options.cssDir %>/main.css'
         ],
         dest: 'dist/<%= pkg.name %>.<%= pkg.version %>.css'
@@ -351,10 +351,10 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'compass:dist', 'clean', 'copy', 'requirejs', 'concat', 'cssmin', 'uglify']);
 
   // Watch tasks
-  
+
   grunt.registerTask('watcher', ['jshint', 'compass:dev']);
   grunt.registerTask('server', ['jshint', 'compass:dev', 'connect', 'watch']);
-  
+
 
   // Deploy tasks
   grunt.registerTask('deploy', ['s3', 'inline_embed:minnpost-hennepin-county-parcels']);

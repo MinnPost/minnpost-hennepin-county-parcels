@@ -55,19 +55,6 @@
       ],
       "returns": "_"
     },
-    "mapbox.js": {
-      "rname": "mapbox",
-      "js": [
-        "mapbox.js/dist/mapbox.uncompressed"
-      ],
-      "css": [
-        "mapbox.js/dist/mapbox.uncompressed"
-      ],
-      "images": [
-        "mapbox.js/dist/images"
-      ],
-      "returns": "L"
-    },
     "minnpost-styles": {
       "rname": "mpStyles",
       "css": [

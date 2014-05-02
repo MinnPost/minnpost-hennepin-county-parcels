@@ -117,9 +117,6 @@ define('helpers', ['jquery', 'underscore'],
 
 define('text!templates/application.underscore',[],function () { return '<div class="application-container">\n  <div class="message-container"></div>\n\n  <div class="content-container">\n\n    <div class="component-label">Hennepin County parcels</div>\n\n    <div class="caption">Here is an awesome, concise caption.</div>\n\n    <div class="legend caption">\n      <ul>\n        <% _.each(legend, function(l, li) { %>\n          <li><span class="inline-block" style="background-color: <%= li %>"></span> <%= l %></li>\n        <% }) %>\n      </ul>\n    </div>\n\n    <div class="map" id="h-county-parcels">\n    </div>\n\n  </div>\n\n  <div class="footnote-container">\n    <div class="footnote">\n      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-hennepin-county-parcels" target="_blank">Github</a>.</p>\n\n        <p>Some map data © OpenStreetMap contributors; licensed under the <a href="http://www.openstreetmap.org/copyright" target="_blank">Open Data Commons Open Database License</a>.  Some map design © MapBox; licensed according to the <a href="http://mapbox.com/tos/" target="_blank">MapBox Terms of Service</a>.  Location geocoding provided by <a href="http://www.mapquest.com/" target="_blank">Mapquest</a> and is not guaranteed to be accurate.</p>\n\n    </div>\n  </div>\n</div>\n';});
 
-
-define('text!templates/loading.underscore',[],function () { return '<div class="loading-container">\n  <div class="loading"><span>Loading...</span></div>\n</div>';});
-
 /**
  * Main application file for: minnpost-hennepin-county-parcels
  *
@@ -129,14 +126,10 @@ define('text!templates/loading.underscore',[],function () { return '<div class="
 
 // Create main application
 define('minnpost-hennepin-county-parcels', [
-  'jquery', 'underscore', 'mapbox', 'mpConfig', 'mpFormatters',
-  'helpers',
-  'text!templates/application.underscore',
-  'text!templates/loading.underscore'
+  'jquery', 'underscore', 'mpConfig', 'mpFormatters', 'helpers',
+  'text!templates/application.underscore'
 ], function(
-  $, _, mapbox, mpConfig, mpFormatters,
-  helpers,
-  tApplication, tLoading
+  $, _, mpConfig, mpFormatters, helpers, tApplication
   ) {
 
   // Constructor for app
@@ -168,7 +161,25 @@ define('minnpost-hennepin-county-parcels', [
       }));
 
       // Add map
-      var map = L.mapbox.map('h-county-parcels', 'minnpost.fec-mn-2012-q1-dots');
+      L.mapbox.config.HTTP_URLS = ['http://ec2-54-82-59-19.compute-1.amazonaws.com:9000/v2/'];
+
+      var map = L.mapbox.map('h-county-parcels', 'hennepin-parcels', {
+        minZoom: 10,
+        maxZoom: 15
+      });
+      map.removeControl(map.infoControl);
+
+      var base = new L.tileLayer('//{s}.tiles.mapbox.com/v3/minnpost.map-dotjndlk/{z}/{x}/{y}.png?update=xxxx', {
+        zIndex: 100,
+        minZoom: 12,
+        maxZoom: 15
+      });
+      map.addLayer(base);
+
+      var under = new L.tileLayer('//{s}.tiles.mapbox.com/v3/minnpost.map-vhjzpwel/{z}/{x}/{y}.png?update=xxxx', {
+        zIndex: -100
+      });
+      map.addLayer(under);
 
       /*
         .setView([40, -74.50], 9);

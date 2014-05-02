@@ -7,7 +7,7 @@ require.config({
     // Mapbox and requireJS don't really work, so we just let
     // the L be global
     'mapbox': {
-      exports: 'L'
+      exports: 'mapbox'
     }
   },
   baseUrl: 'js',
@@ -17,7 +17,8 @@ require.config({
     'text': '../bower_components/text/text',
     'jquery': '../bower_components/jquery/dist/jquery',
     'underscore': '../bower_components/underscore/underscore',
-    'mapbox': '../bower_components/mapbox.js/dist/mapbox.uncompressed',
+    // Mapbox is include manually because it doesn't play nice with Require
+    //'mapbox': '../bower_components/mapbox.js/dist/mapbox.uncompressed',
     'mpConfig': '../bower_components/minnpost-styles/dist/minnpost-styles.config',
     'mpFormatters': '../bower_components/minnpost-styles/dist/minnpost-styles.formatters',
     'mpMaps': '../bower_components/minnpost-styles/dist/minnpost-styles.maps',

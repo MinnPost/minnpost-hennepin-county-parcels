@@ -7,14 +7,10 @@
 
 // Create main application
 define('minnpost-hennepin-county-parcels', [
-  'jquery', 'underscore', 'mapbox', 'mpConfig', 'mpFormatters',
-  'helpers',
-  'text!templates/application.underscore',
-  'text!templates/loading.underscore'
+  'jquery', 'underscore', 'mpConfig', 'mpFormatters', 'helpers',
+  'text!templates/application.underscore'
 ], function(
-  $, _, mapbox, mpConfig, mpFormatters,
-  helpers,
-  tApplication, tLoading
+  $, _, mpConfig, mpFormatters, helpers, tApplication
   ) {
 
   // Constructor for app
@@ -46,9 +42,25 @@ define('minnpost-hennepin-county-parcels', [
       }));
 
       // Add map
-      console.log(L.mapbox.config.HTTP_URLS);
+      L.mapbox.config.HTTP_URLS = ['http://ec2-54-82-59-19.compute-1.amazonaws.com:9000/v2/'];
 
-      var map = L.mapbox.map('h-county-parcels', 'minnpost.fec-mn-2012-q1-dots');
+      var map = L.mapbox.map('h-county-parcels', 'hennepin-parcels', {
+        minZoom: 10,
+        maxZoom: 15
+      });
+      map.removeControl(map.infoControl);
+
+      var base = new L.tileLayer('//{s}.tiles.mapbox.com/v3/minnpost.map-dotjndlk/{z}/{x}/{y}.png?update=xxxx', {
+        zIndex: 100,
+        minZoom: 12,
+        maxZoom: 15
+      });
+      map.addLayer(base);
+
+      var under = new L.tileLayer('//{s}.tiles.mapbox.com/v3/minnpost.map-vhjzpwel/{z}/{x}/{y}.png?update=xxxx', {
+        zIndex: -100
+      });
+      map.addLayer(under);
 
       /*
         .setView([40, -74.50], 9);
