@@ -7,6 +7,9 @@ bower_components/
 dist/data.js
 dist/templates.js
 
+# Big data
+data/Hennepin_County_Tax_Property_Base*
+data-processing/mapbox-hennepin-parcels/layers
 
 # General git ignores
 .sass-cache

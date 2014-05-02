@@ -8,15 +8,24 @@ You can see this project in action at *published story link goes here*.
 
 ## Data
 
-*Describe the data sources here.  Use links and URLs to show where the data came from.  Put small sized originals or modified data sources in the ```data``` folder*
-
-*For larger data sources that may need to be processed, provide instructions on how to download.  For instance:  ```cd data && wget blah.txt```.  Also, make sure to put an entry in the ```.gitignore```.*
+Parcel data from [Hennepin County](http://www.hennepin.us/your-government/open-government/gis-open-data).  [Original download](http://gis-stage.co.hennepin.mn.us/publicgisdata/hennepin_county_tax_property_base.zip) is in ESRI Geodatabase (FileGDB) (.gdb) format.
 
 ## Data processing
 
-The following describes how the data was processed and is not necessarily needed to run or install the application, but more included for reference, transparency, and development.
+Unforuntately the FileGDB format is very proprietary and support for it in open source applications like QGIS or Tilemill are not very supported at the moment.  We will use already converted files, see below on how to convert.  Note that Tilemill may crash on unzipping large files due to memeory use, hence why we do it like this.
 
-*Describe data processing here, include commands, or document any manual steps taken.  Put data processing scripts or configurations in the ```data-processing``` folder.*
+1. Use variable for Mapbox path just in case yours is different: `export MAPBOX_PATH=~/Documents/MapBox/`
+1. Get the data and extract it: `cd data && wget http://data.dbspatial.com/hennepin/Hennepin_County_Tax_Property_Base.shp.zip && unzip Hennepin_County_Tax_Property_Base.shp.zip -d Hennepin_County_Tax_Property_Base; cd -;`
+1. Link data into Mapbox directory: `ln -s "$(pwd)/data/Hennepin_County_Tax_Property_Base" $MAPBOX_PATH/data/Hennepin_County_Tax_Property_Base`
+1. Link the Tilemill project into Mapbox directory: `ln -s "$(pwd)/data-processing/mapbox-hennepin-parcels" $MAPBOX_PATH/project/mapbox-hennepin-parcels`
+
+### Converting FileGDB (ESRI Geodatabase) to Shapefiles
+
+Essentially, we need to install GADL 1.11+ or build GDAL with this support and then use `ogr2ogr` to convert it.  More coming soon.
+
+### Exporting tiles
+
+Ideally we would use Mapbox to host our `mbtiles` from Tilemill but, currently, our account is full and the next tier is 10x more expensive.  So, we host on S3 temporarily; this will make it slow because of many things, most specifically that browsers will only download a few images at a time from the same domain.
 
 ## Development and running locally
 
@@ -30,8 +39,6 @@ All commands are assumed to be on the [command line](http://en.wikipedia.org/wik
    * On a Mac, do: `brew install node`
 1. Optionally, for development, install [Grunt](http://gruntjs.com/): `npm install -g grunt-cli`
 1. Install [Bower](http://bower.io/): `npm install -g bower`
-
-
 1. Install [Sass](http://sass-lang.com/): `gem install sass`
    * On a Mac do: `sudo gem install sass`
    1. Install [Compass](http://compass-style.org/): `gem install compass`
@@ -46,9 +53,6 @@ Get the code for this project and install the necessary dependency libraries and
 1. Go into the template directory: `cd minnpost-hennepin-county-parcels`
 1. Install NodeJS packages: `npm install`
 1. Install Bower components: `bower install`
-
-
-
 1. Because Mapbox comes unbuilt, we need to build it: `cd bower_components/mapbox.js/ && npm install && make; cd -;`
 
 ### Running locally
@@ -90,7 +94,6 @@ Adding libraries is not difficult, but there are a few steps.
   "returns": "Library"
 }
 ```
-
 
 ### Testing
 

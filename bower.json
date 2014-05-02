@@ -23,81 +23,74 @@
     "minnpost-styles": "master"
   },
   "dependencyMap": {
-  "requirejs": {
-    "rname": "requirejs",
-    "js": [
-      "requirejs/require"
-    ]
-  },
-  "almond": {
-    "rname": "almond",
-    "js": [
-      "almond/almond"
-    ]
-  },
-  "text": {
-    "rname": "text",
-    "js": [
-      "text/text"
-    ]
-  },
-  "jquery": {
-    "rname": "jquery",
-    "js": [
-      "jquery/dist/jquery"
-    ],
-    "returns": "$"
-  },
-  "underscore": {
-    "rname": "underscore",
-    "js": [
-      "underscore/underscore"
-    ],
-    "returns": "_"
-  },
-  "mapbox.js": {
-    "rname": "mapbox",
-    "js": [
-      "mapbox.js/dist/mapbox.uncompressed"
-    ],
-    "css": [
-      "mapbox.js/dist/mapbox.uncompressed"
-    ],
-    "images": [
-      "mapbox.js/dist/images"
-    ],
-    "returns": "L"
-  },
-  "minnpost-styles": {
-    "rname": "mpStyles",
-    "css": [
-      "//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css",
-      "minnpost-styles/dist/minnpost-styles"
-    ],
-    "sass": [
-      "minnpost-styles/styles/main"
-    ]
-  },
-  "mpConfig": {
-    "rname": "mpConfig",
-    "js": [
-      "minnpost-styles/dist/minnpost-styles.config"
-    ],
-    "returns": "mpConfig"
-  },
-  "mpFormatters": {
-    "rname": "mpFormatters",
-    "js": [
-      "minnpost-styles/dist/minnpost-styles.formatters"
-    ],
-    "returns": "mpFormatters"
-  },
-  "mpMaps": {
-    "rname": "mpMaps",
-    "js": [
-      "minnpost-styles/dist/minnpost-styles.maps"
-    ],
-    "returns": "mpMaps"
+    "requirejs": {
+      "rname": "requirejs",
+      "js": [
+        "requirejs/require"
+      ]
+    },
+    "almond": {
+      "rname": "almond",
+      "js": [
+        "almond/almond"
+      ]
+    },
+    "text": {
+      "rname": "text",
+      "js": [
+        "text/text"
+      ]
+    },
+    "jquery": {
+      "rname": "jquery",
+      "js": [
+        "jquery/dist/jquery"
+      ],
+      "returns": "$"
+    },
+    "underscore": {
+      "rname": "underscore",
+      "js": [
+        "underscore/underscore"
+      ],
+      "returns": "_"
+    },
+    "mapbox.js": {
+      "rname": "mapbox",
+      "js": [
+        "mapbox.js/dist/mapbox.uncompressed"
+      ],
+      "css": [
+        "mapbox.js/dist/mapbox.uncompressed"
+      ],
+      "images": [
+        "mapbox.js/dist/images"
+      ],
+      "returns": "L"
+    },
+    "minnpost-styles": {
+      "rname": "mpStyles",
+      "css": [
+        "//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css",
+        "minnpost-styles/dist/minnpost-styles"
+      ],
+      "sass": [
+        "minnpost-styles/styles/main"
+      ]
+    },
+    "mpConfig": {
+      "rname": "mpConfig",
+      "js": [
+        "minnpost-styles/dist/minnpost-styles.config"
+      ],
+      "returns": "mpConfig"
+    },
+    "mpFormatters": {
+      "rname": "mpFormatters",
+      "js": [
+        "minnpost-styles/dist/minnpost-styles.formatters"
+      ],
+      "returns": "mpFormatters"
+    }
   }
-}
 }

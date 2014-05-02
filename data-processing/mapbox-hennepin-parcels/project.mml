@@ -1,0 +1,60 @@
+{
+  "bounds": [
+    -93.7817,
+    44.767,
+    -93.1623,
+    45.2573
+  ],
+  "center": [
+    -93.4768,
+    45.0209,
+    10
+  ],
+  "format": "png8",
+  "interactivity": {
+    "layer": "parcels",
+    "template_teaser": "{{^MKT_VAL_TO}}\n<div class=“market-value”>No estimated market value found.</div>\n{{/MKT_VAL_TO}}\n{{#MKT_VAL_TO}}\n<div class=“market-value\">Total market value: {{{MKT_VAL_TO}}}</div>\n{{/MKT_VAL_TO}}\n",
+    "template_full": "",
+    "fields": [
+      "MKT_VAL_TO"
+    ]
+  },
+  "minzoom": 10,
+  "maxzoom": 15,
+  "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+  "Stylesheet": [
+    "style.mss"
+  ],
+  "Layer": [
+    {
+      "geometry": "polygon",
+      "extent": [
+        -93.76656560709844,
+        44.784036397064796,
+        -93.17849042932485,
+        45.24667581138511
+      ],
+      "id": "parcels",
+      "class": "",
+      "Datasource": {
+        "type": "shape",
+        "file": "../../data/Hennepin_County_Tax_Property_Base/Hennepin_County_Tax_Property_Base.shp",
+        "id": "parcels",
+        "project": "mapbox-hennepin-parcels",
+        "srs": ""
+      },
+      "layer": null,
+      "srs-name": "autodetect",
+      "srs": "",
+      "advanced": {},
+      "name": "parcels"
+    }
+  ],
+  "scale": 1,
+  "metatile": 2,
+  "name": "Hennepin County Parcels",
+  "description": "",
+  "legend": "",
+  "attribution": "Hennepin County GIS",
+  "version": "0.0.1"
+}

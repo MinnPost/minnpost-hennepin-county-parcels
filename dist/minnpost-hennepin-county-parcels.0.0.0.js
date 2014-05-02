@@ -1,3 +1,125 @@
+
+/**
+ * Helpers functions such as formatters or extensions
+ * to libraries.
+ */
+define('helpers', ['jquery', 'underscore'],
+  function($, _) {
+
+  var helpers = {};
+
+  /**
+   * Override Backbone's ajax call to use JSONP by default as well
+   * as force a specific callback to ensure that server side
+   * caching is effective.
+   */
+  helpers.overrideBackboneAJAX = function() {
+    Backbone.ajax = function() {
+      var options = arguments;
+
+      if (options[0].dataTypeForce !== true) {
+        options[0].dataType = 'jsonp';
+        options[0].jsonpCallback = 'mpServerSideCachingHelper' +
+          _.hash(options[0].url);
+      }
+      return Backbone.$.ajax.apply(Backbone.$, options);
+    };
+  };
+
+  /**
+   * Returns version of MSIE.
+   */
+  helpers.isMSIE = function() {
+    var match = /(msie) ([\w.]+)/i.exec(navigator.userAgent);
+    return match ? parseInt(match[2], 10) : false;
+  };
+
+  /**
+   * Wrapper for a JSONP request, the first set of options are for
+   * the AJAX request, while the other are from the application.
+   */
+  helpers.jsonpRequest = function(requestOptions, appOptions) {
+    options.dataType = 'jsonp';
+    options.jsonpCallback = 'mpServerSideCachingHelper' +
+      _.hash(options.url);
+
+    if (appOptions.remoteProxy) {
+      options.url = options.url + '&callback=mpServerSideCachingHelper';
+      options.url = appOptions.remoteProxy + encodeURIComponent(options.url);
+      options.cache = true;
+    }
+
+    return $.ajax.apply($, [options]);
+  };
+
+  /**
+   * Data source handling.  For development, we can call
+   * the data directly from the JSON file, but for production
+   * we want to proxy for JSONP.
+   *
+   * `name` should be relative path to dataset
+   * `options` are app options
+   *
+   * Returns jQuery's defferred object.
+   */
+  helpers.getLocalData = function(name, options) {
+    var useJSONP = false;
+    var defers = [];
+    name = (_.isArray(name)) ? name : [ name ];
+
+    // If the data path is not relative, then use JSONP
+    if (options && options.paths && options.paths.data.indexOf('http') === 0) {
+      useJSONP = true;
+    }
+
+    // Go through each file and add to defers
+    _.each(name, function(d) {
+      var defer;
+
+      if (useJSONP) {
+        defer = helpers.jsonpRequest({
+          url: proxyPrefix + encodeURI(options.paths.data + d)
+        }, options);
+      }
+      else {
+        defer = $.getJSON(options.paths.data + d);
+      }
+      defers.push(defer);
+    });
+
+    return $.when.apply($, defers);
+  };
+
+  /**
+   * Reads query string and turns into object.
+   */
+  helpers.parseQueryString = function() {
+    var assoc  = {};
+    var decode = function(s) {
+      return decodeURIComponent(s.replace(/\+/g, " "));
+    };
+    var queryString = location.search.substring(1);
+    var keyValues = queryString.split('&');
+
+    _.each(keyValues, function(v, vi) {
+      var key = v.split('=');
+      if (key.length > 1) {
+        assoc[decode(key[0])] = decode(key[1]);
+      }
+    });
+
+    return assoc;
+  };
+
+  return helpers;
+});
+
+
+define('text!templates/application.underscore',[],function () { return '<div class="application-container">\n  <div class="message-container"></div>\n\n  <div class="content-container">\n\n    <div class="component-label">Hennepin County parcels</div>\n\n    <div class="caption">Here is an awesome, concise caption.</div>\n\n    <div class="legend caption">\n      <ul>\n        <% _.each(legend, function(l, li) { %>\n          <li><span class="inline-block" style="background-color: <%= li %>"></span> <%= l %></li>\n        <% }) %>\n      </ul>\n    </div>\n\n    <div class="map" id="h-county-parcels">\n    </div>\n\n  </div>\n\n  <div class="footnote-container">\n    <div class="footnote">\n      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-hennepin-county-parcels" target="_blank">Github</a>.</p>\n\n        <p>Some map data © OpenStreetMap contributors; licensed under the <a href="http://www.openstreetmap.org/copyright" target="_blank">Open Data Commons Open Database License</a>.  Some map design © MapBox; licensed according to the <a href="http://mapbox.com/tos/" target="_blank">MapBox Terms of Service</a>.  Location geocoding provided by <a href="http://www.mapquest.com/" target="_blank">Mapquest</a> and is not guaranteed to be accurate.</p>\n\n    </div>\n  </div>\n</div>\n';});
+
+
+define('text!templates/loading.underscore',[],function () { return '<div class="loading-container">\n  <div class="loading"><span>Loading...</span></div>\n</div>';});
+
 /**
  * Main application file for: minnpost-hennepin-county-parcels
  *
@@ -46,8 +168,6 @@ define('minnpost-hennepin-county-parcels', [
       }));
 
       // Add map
-      console.log(L.mapbox.config.HTTP_URLS);
-
       var map = L.mapbox.map('h-county-parcels', 'minnpost.fec-mn-2012-q1-dots');
 
       /*
@@ -192,3 +312,4 @@ require(['jquery', 'minnpost-hennepin-county-parcels'], function($, App) {
     var app = new App();
   });
 });
+
