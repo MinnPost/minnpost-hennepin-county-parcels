@@ -29,8 +29,9 @@ body .node-unpublished {
       padding: 0;
 
       li {
-        width: 12%;
-        margin: 0 .1em 1em 0;
+        width: 9%;
+        margin: 0 0.25% 1em 0;
+        font-size: .85em;
 
         span {
           display: block;
@@ -46,7 +47,7 @@ body .node-unpublished {
   // Custom breakpoints
   @media screen and (max-width: 500px) {
     .legend ul li {
-      font-size: .85em;
+      font-size: .75em;
     }
   }
 }

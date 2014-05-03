@@ -33,12 +33,15 @@ define('minnpost-hennepin-county-parcels', [
       this.$el.html(_.template(tApplication, {
         legend: {
           '#F1F1F1': '$0 or no data.',
-          '#55307e': '$0 - $100k',
-          '#8e71a8': '$100k - $250k',
-          '#c6b6d3': '$250k - $500',
-          '#b9d9bf': '$500 - $1M',
-          '#74b281': '$1M - $3M',
-          '#1d8c47': 'above $3M'
+          '#543005': '$0 - $100k',
+          '#8c510a': '$100k - $250k',
+          '#bf812d': '$250k - $500',
+          '#dfc27d': '$500 - $1M',
+          '#c7eae5': '$1M - $2M',
+          '#80cdc1': '$2M - $5M',
+          '#35978f': '$5M - $20M',
+          '#01665e': '$20M - $100M',
+          '#003c30': 'above $100M'
         }
       }));
 
@@ -50,7 +53,7 @@ define('minnpost-hennepin-county-parcels', [
     makeMap: function() {
       // Base urls.  We our using a temporary Tilestream server, so we override
       // what Mapbox usually expects
-      var tilestream_base = '//ec2-54-82-59-19.compute-1.amazonaws.com:9000/v2/';
+      var tilestream_base = '//ec2-54-82-59-19.compute-1.amazonaws.com:9003/v2/';
       var mapbox_base = '//{s}.tiles.mapbox.com/v3/';
       var thisApp = this;
 
@@ -60,7 +63,7 @@ define('minnpost-hennepin-county-parcels', [
       // Make base map
       this.map = L.mapbox.map('h-county-parcels', 'hennepin-parcels', {
         minZoom: 10,
-        maxZoom: 15
+        maxZoom: 16
       });
       // Remove mapbox control
       this.map.removeControl(this.map.infoControl);
@@ -68,8 +71,7 @@ define('minnpost-hennepin-county-parcels', [
       // Add street overlay
       L.tileLayer(mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png?update=xxxx', {
         zIndex: 100,
-        minZoom: 12,
-        maxZoom: 15
+        minZoom: 12
       }).addTo(this.map);
 
       // Add terrain underlay
