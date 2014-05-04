@@ -21,7 +21,7 @@
     "underscore": "~1.6.0",
     "jquery": "~1.11.0",
     "minnpost-styles": "master",
-    "Leaflet.utfgrid": "https://github.com/zzolo/Leaflet.utfgrid.git#master"
+    "Leaflet.utfgrid": "https://github.com/danzel/Leaflet.utfgrid.git#ac7c3df95080849f8f32d85fae6291d602ebf329"
   },
   "dependencyMap": {
     "requirejs": {
