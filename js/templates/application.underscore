@@ -5,7 +5,7 @@
 
     <div class="component-label">Hennepin County parcels</div>
 
-    <div class="caption">The map below shows the estimated market value of most all the parcels in Hennepin County.  Hover over (or tap on a mobile device) to see some more information about the parcel.  Check out the <a href="#" data-location="harriet" class="location-link">expensive houses around Lake Harriet</a>, or the <a href="#" data-location="ids" class="location-link">very expensive downtown Minneapolis</a> (with the IDS Center taking the most expensive at $193M).</div>
+    <div class="caption">The map below shows the estimated market value of most all the parcels in Hennepin County.  Hover over (or tap on a mobile device) to see some more information about the parcel.</div>
 
     <div class="legend caption">
       <ul>
@@ -22,9 +22,7 @@
 
   <div class="footnote-container">
     <div class="footnote">
-      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-hennepin-county-parcels" target="_blank">Github</a>.</p>
-
-        <p>Some map data © OpenStreetMap contributors; licensed under the <a href="http://www.openstreetmap.org/copyright" target="_blank">Open Data Commons Open Database License</a>.  Some map design © MapBox; licensed according to the <a href="http://mapbox.com/tos/" target="_blank">MapBox Terms of Service</a>.  Location geocoding provided by <a href="http://www.mapquest.com/" target="_blank">Mapquest</a> and is not guaranteed to be accurate.</p>
+      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-hennepin-county-parcels" target="_blank">Github</a>.  Some map data © OpenStreetMap contributors; licensed under the <a href="http://www.openstreetmap.org/copyright" target="_blank">Open Data Commons Open Database License</a>.  Some map design © MapBox; licensed according to the <a href="http://mapbox.com/tos/" target="_blank">MapBox Terms of Service</a>.</p>
 
     </div>
   </div>

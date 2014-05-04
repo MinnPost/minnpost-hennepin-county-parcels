@@ -7,10 +7,11 @@
 
 // Create main application
 define('minnpost-hennepin-county-parcels', [
-  'jquery', 'underscore', 'mpConfig', 'mpFormatters', 'helpers',
-  'text!templates/application.underscore'
+  'jquery', 'underscore', 'leafletUTFGrid', 'mpConfig', 'mpFormatters', 'mpMaps', 'helpers',
+  'text!templates/application.underscore',
+  'text!templates/map-tooltip.underscore'
 ], function(
-  $, _, mpConfig, mpFormatters, helpers, tApplication
+  $, _, LUTF, mpConfig, mpFormatters, mpMaps, helpers, tApplication, tTooltip
   ) {
 
   // Constructor for app
@@ -45,18 +46,74 @@ define('minnpost-hennepin-county-parcels', [
         }
       }));
 
-      this.makeMap();
-      this.handleEvents();
+      // Make tooltip template
+      this.tooltipTemplate = _.template(tTooltip);
+
+      // Get tilejson data
+      $.getJSON(this.options.tilestream_base + this.options.tilestream_map + '.json?callback=?', function(data) {
+        thisApp.tilejson = data;
+        thisApp.makeMap();
+        thisApp.handleEvents();
+      });
     },
 
     // Put together map
     makeMap: function() {
-      // Base urls.  We our using a temporary Tilestream server, so we override
-      // what Mapbox usually expects
-      var tilestream_base = '//ec2-54-82-59-19.compute-1.amazonaws.com:9003/v2/';
-      var mapbox_base = '//{s}.tiles.mapbox.com/v3/';
       var thisApp = this;
 
+      // Mapbox.js doesn't seem to play nicely with cross domain requests
+      // to our custom tilestream server (though it looks like the appropriate
+      // headers are there).  So, we use a different library for the UTF grid
+
+      // Map
+      this.map = new L.map('h-county-parcels', {
+        minZoom: this.tilejson.minzoom,
+        maxZoom: this.tilejson.maxzoom,
+        scrollWheelZoom: false,
+        trackResize: true
+      }).setView([this.tilejson.center[1], this.tilejson.center[0]], this.tilejson.center[2]);
+      this.map.removeControl(this.map.attributionControl);
+
+      // Add tooltip control
+      this.tooltip = new mpMaps.TooltipControl();
+      this.map.addControl(this.tooltip);
+
+      // Add main map
+      L.tileLayer(this.options.tilestream_base + this.options.tilestream_map +
+        '/{z}/{x}/{y}.png', {
+      }).addTo(this.map);
+
+      // Add main map grid
+      this.grid = new L.UtfGrid(this.options.tilestream_base +
+        this.options.tilestream_map + '/{z}/{x}/{y}.grid.json?callback={cb}', {
+        useJsonP: true
+      });
+      this.grid.on('mouseover', function(e) {
+        e.data = thisApp.parseParcelData(e.data);
+        thisApp.tooltip.update(thisApp.tooltipTemplate({
+          format: mpFormatters,
+          data: e.data
+        }));
+      });
+      this.grid.on('mouseout', function(e) {
+        thisApp.tooltip.hide();
+      });
+      this.map.addLayer(this.grid);
+
+      // Add street overlay, limit view to when zoomed further in
+      L.tileLayer(this.options.mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png', {
+        zIndex: 100,
+        minZoom: 12
+      }).addTo(this.map);
+
+      // Add terrain underlay
+      L.tileLayer(this.options.mapbox_base + 'minnpost.map-vhjzpwel/{z}/{x}/{y}.png', {
+        zIndex: -100
+      }).addTo(this.map);
+
+
+      // This way doesn't work with cross domain stuff, though its simpler
+      /*
       // Override urls for Mapbox
       L.mapbox.config.HTTP_URLS = [tilestream_base];
 
@@ -69,22 +126,15 @@ define('minnpost-hennepin-county-parcels', [
       this.map.removeControl(this.map.infoControl);
 
       // Add street overlay
-      L.tileLayer(mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png?update=xxxx', {
+      L.tileLayer(mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png', {
         zIndex: 100,
         minZoom: 12
       }).addTo(this.map);
 
       // Add terrain underlay
-      L.tileLayer(mapbox_base + 'minnpost.map-vhjzpwel/{z}/{x}/{y}.png?update=xxxx', {
+      L.tileLayer(mapbox_base + 'minnpost.map-vhjzpwel/{z}/{x}/{y}.png', {
         zIndex: -100
       }).addTo(this.map);
-
-      /*
-        .setView([40, -74.50], 9);
-      var map = L.mapbox.map('h-county-parcels');
-      var myTiles = L.mapbox.tileLayer('minnpost.fec-mn-2012-q1-dots').addTo(map);
-      var myGridLayer = L.mapbox.gridLayer('minnpost.fec-mn-2012-q1-dots').addTo(map);
-      var myGridControl = L.mapbox.gridControl(myGridLayer).addTo(map);
       */
 
       // For whatever reason, the map may not load complete, probably
@@ -119,12 +169,22 @@ define('minnpost-hennepin-county-parcels', [
 
     },
 
+    // Make the data a tad better
+    parseParcelData: function(data) {
+      data.BUILD_YR = (data.BUILD_YR == '0000' || data.BUILD_YR < 1) ? null : data.BUILD_YR;
+      return data;
+    },
 
     // Default options
     defaultOptions: {
       projectName: 'minnpost-hennepin-county-parcels',
       remoteProxy: null,
       el: '.minnpost-hennepin-county-parcels-container',
+      // We our using a temporary Tilestream server, so we override
+      // what Mapbox usually expects
+      tilestream_base: '//ec2-54-82-59-19.compute-1.amazonaws.com:9003/v2/',
+      tilestream_map: 'hennepin-parcels',
+      mapbox_base: '//{s}.tiles.mapbox.com/v3/',
       availablePaths: {
         local: {
           css: ['.tmp/css/main.css'],

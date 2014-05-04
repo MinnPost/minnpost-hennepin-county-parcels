@@ -1,0 +1,20 @@
+<% if (!data.MKT_VAL_TO) { %>
+  <div>There is no estimated market value on this parcel.</div>
+<% } else { %>
+
+  <div>
+    Estimated market value is <strong><%= '$' + format.number(data.MKT_VAL_TO, 0) %></strong>.
+    <% if (data.EST_BLDG_M || data.EST_LAND_M) { %>
+      This is made up from a building value of <%= '$' + format.number(data.EST_BLDG_M || 0, 0) %> and a land value of <%= '$' + format.number(data.EST_LAND_M || 0, 0) %>.
+    <% } %>
+
+    <% if (data.BUILD_YR) { %>
+      Approximately built in <strong><%= data.BUILD_YR %></strong>.
+    <% } %>
+
+    <% if (data.HMSTD_CD1_ || data.PROPERTY_T) { %>
+      This parcel is classified as <em><%= data.PROPERTY_T.toLowerCase() %></em>, <em><%= data.HMSTD_CD1_.toLowerCase() %></em>.
+    <% } %>
+  </div>
+
+<% } %>

@@ -7,11 +7,17 @@ body .node-unpublished {
   background-repeat: no-repeat;
 }
 
+.mp .browser-upgrade-note {
+  background-color: #F1F1F1;
+  padding: 2em 3em;
+}
+
 // Wrap everything for specificity
 .mp .minnpost-hennepin-county-parcels-container {
 
   .application-container {
-    padding-top: 1em;
+    padding-top: 1.5em;
+    margin-bottom: 1.5em;
   }
 
   #h-county-parcels {
@@ -32,6 +38,7 @@ body .node-unpublished {
         width: 9%;
         margin: 0 0.25% 1em 0;
         font-size: .85em;
+        vertical-align: top;
 
         span {
           display: block;
@@ -45,9 +52,15 @@ body .node-unpublished {
 
 
   // Custom breakpoints
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 550px) {
     .legend ul li {
       font-size: .75em;
+      width: 17%;
+    }
+
+
+    #h-county-parcels {
+      height: 30em;
     }
   }
 }

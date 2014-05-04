@@ -20,7 +20,8 @@
     "text": "~2.0.12",
     "underscore": "~1.6.0",
     "jquery": "~1.11.0",
-    "minnpost-styles": "master"
+    "minnpost-styles": "master",
+    "Leaflet.utfgrid": "https://github.com/zzolo/Leaflet.utfgrid.git#master"
   },
   "dependencyMap": {
     "requirejs": {
