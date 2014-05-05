@@ -2,7 +2,7 @@
 
 A (map) look at Hennepin County parcels, specifically around market value.
 
-You can see this project in action at *published story link goes here*.
+You can see this [project in action here](http://www.minnpost.com/data/2014/05/hennepin-county-property-values-where-wealth).
 
 *Unless otherwise noted, MinnPost projects on [Github](https://github.com/minnpost) are story-driven and meant for transparency sake and not focused on re-use.  For a list of our more reusable projects, go to [code.minnpost.com](http://code.minnpost.com).*
 
