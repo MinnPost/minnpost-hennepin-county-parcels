@@ -102,8 +102,7 @@ define('minnpost-hennepin-county-parcels', [
 
       // Add street overlay, limit view to when zoomed further in
       L.tileLayer(this.options.mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png', {
-        zIndex: 100,
-        minZoom: 12
+        zIndex: 100
       }).addTo(this.map);
 
       // Add terrain underlay
