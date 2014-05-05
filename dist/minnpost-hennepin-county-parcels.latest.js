@@ -566,10 +566,16 @@ define('minnpost-hennepin-county-parcels', [
       this.tooltipTemplate = _.template(tTooltip);
 
       // Get tilejson data
-      $.getJSON(this.options.tilestream_base + this.options.tilestream_map + '.json?callback=?', function(data) {
-        thisApp.tilejson = data;
-        thisApp.makeMap();
-        thisApp.handleEvents();
+      $.ajax({
+        url: this.options.tilestream_base + this.options.tilestream_map + '.json?callback=?',
+        dataType: 'jsonp',
+        jsonpCallback: 'mpCacheBuster',
+        cache: true,
+        success: function(data) {
+          thisApp.tilejson = data;
+          thisApp.makeMap();
+          thisApp.handleEvents();
+        }
       });
     },
 
@@ -618,8 +624,7 @@ define('minnpost-hennepin-county-parcels', [
 
       // Add street overlay, limit view to when zoomed further in
       L.tileLayer(this.options.mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png', {
-        zIndex: 100,
-        minZoom: 12
+        zIndex: 100
       }).addTo(this.map);
 
       // Add terrain underlay
