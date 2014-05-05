@@ -16,6 +16,8 @@ We use some [already converted files](http://data.dbspatial.com/hennepin/) provi
 
 Unfortunately the FileGDB format is very proprietary and support for it in open source applications like QGIS or Tilemill are not very well supported at the moment.  We will use already converted files, see below on how to convert.  Note that Tilemill may crash on unzipping large files due to memory use, hence why we do it like this.
 
+### Setup TileMill project
+
 1. Use variable for Mapbox path just in case yours is different: `export MAPBOX_PATH=~/Documents/MapBox/`
 1. Get the data and extract it: `cd data && wget http://data.dbspatial.com/hennepin/Hennepin_County_Tax_Property_Base.shp.zip && unzip Hennepin_County_Tax_Property_Base.shp.zip -d Hennepin_County_Tax_Property_Base; cd -;`
 1. Link data into Mapbox directory: `ln -s "$(pwd)/data/Hennepin_County_Tax_Property_Base" $MAPBOX_PATH/data/Hennepin_County_Tax_Property_Base`
@@ -38,7 +40,9 @@ On Mac, this means using Homebrew and the [custom OSGeo tap](https://github.com/
 
 ### Exporting tiles
 
-Ideally we would use Mapbox to host our `mbtiles` from Tilemill but, currently, our account is full and the next tier is 10x more expensive.  So, we host on S3 temporarily; this will make it slow because of many things, most specifically that browsers will only download a few images at a time from the same domain.
+Use TileMill to export to `.mbtiles`.
+
+Ideally we would use Mapbox to host our `mbtiles` from Tilemill but, currently, our account is full and the next tier is 10x more expensive.  Currently we are running a [small Tilestream server](https://github.com/MinnPost/tilestream-server) on AWS.
 
 ## Development and running locally
 
