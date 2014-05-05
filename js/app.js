@@ -56,7 +56,6 @@ define('minnpost-hennepin-county-parcels', [
         jsonpCallback: 'mpCacheBuster',
         cache: true,
         success: function(data) {
-          console.log(data);
           thisApp.tilejson = data;
           thisApp.makeMap();
           thisApp.handleEvents();
