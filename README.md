@@ -8,11 +8,13 @@ You can see this project in action at *published story link goes here*.
 
 ## Data
 
-Parcel data from [Hennepin County](http://www.hennepin.us/your-government/open-government/gis-open-data).  [Original download](http://gis-stage.co.hennepin.mn.us/publicgisdata/hennepin_county_tax_property_base.zip) is in ESRI Geodatabase (FileGDB) (.gdb) format.
+Parcel data from [Hennepin County](http://www.hennepin.us/your-government/open-government/gis-open-data); detailed information about the dataset can be found [on PDF](http://www.hennepin.us/~/media/hennepinus/your-government/open-government/taxable-parcels.pdf).  [Original download](http://gis-stage.co.hennepin.mn.us/publicgisdata/hennepin_county_tax_property_base.zip) is in ESRI Geodatabase (FileGDB) (.gdb) format.
+
+We use some [already converted files](http://data.dbspatial.com/hennepin/) provided by David Bitner.  The process for converting is described on [Github](https://github.com/dbSpatial/opentwincities/blob/master/fetch_hennepin.sh).
 
 ## Data processing
 
-Unforuntately the FileGDB format is very proprietary and support for it in open source applications like QGIS or Tilemill are not very supported at the moment.  We will use already converted files, see below on how to convert.  Note that Tilemill may crash on unzipping large files due to memeory use, hence why we do it like this.
+Unfortunately the FileGDB format is very proprietary and support for it in open source applications like QGIS or Tilemill are not very well supported at the moment.  We will use already converted files, see below on how to convert.  Note that Tilemill may crash on unzipping large files due to memory use, hence why we do it like this.
 
 1. Use variable for Mapbox path just in case yours is different: `export MAPBOX_PATH=~/Documents/MapBox/`
 1. Get the data and extract it: `cd data && wget http://data.dbspatial.com/hennepin/Hennepin_County_Tax_Property_Base.shp.zip && unzip Hennepin_County_Tax_Property_Base.shp.zip -d Hennepin_County_Tax_Property_Base; cd -;`
@@ -21,7 +23,18 @@ Unforuntately the FileGDB format is very proprietary and support for it in open 
 
 ### Converting FileGDB (ESRI Geodatabase) to Shapefiles
 
-Essentially, we need to install GADL 1.11+ or build GDAL with this support and then use `ogr2ogr` to convert it.  More coming soon.
+Essentially, we need to install GADL 1.11+ or build GDAL with this support and then use `ogr2ogr` to convert it.
+
+On Mac, this means using Homebrew and the [custom OSGeo tap](https://github.com/OSGeo/homebrew-osgeo4mac).
+
+1. Download file from ESRI, specifically the "File Geodatabase API 1.3 version for Mac 64-bit" version.  This requires making a free account on ESRI.
+    * http://www.esri.com/apps/products/download/index.cfm?fuseaction=#File_Geodatabase_API_1.3
+1. Copy the file to Homebrew cache: `cp FileGDB_API_1_3-64.zip $(brew --cache)/FileGDB_API_1_3-64.zip
+1. Install tap (ensure that old version of tap is removed): `brew untap dakcarto/osgeo4mac && brew tap osgeo/osgeo4mac && brew tap --repair;`
+1. `brew install osgeo/osgeo4mac/gdal-filegdb`
+1. `brew install osgeo/osgeo4mac/gdal --complete --enable-unsupported`
+1. Tell GDAL about the plugins: `export GDAL_DRIVER_PATH=$(brew --prefix)/lib/gdalplugins`
+    * This should go in your `.bash_profile` so that it is consistently available.
 
 ### Exporting tiles
 
