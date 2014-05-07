@@ -7,11 +7,11 @@
 
 // Create main application
 define('minnpost-hennepin-county-parcels', [
-  'jquery', 'underscore', 'leafletUTFGrid', 'mpConfig', 'mpFormatters', 'mpMaps', 'helpers',
+  'jquery', 'underscore', 'mpConfig', 'mpFormatters', 'mpMaps', 'helpers',
   'text!templates/application.underscore',
   'text!templates/map-tooltip.underscore'
 ], function(
-  $, _, LUTF, mpConfig, mpFormatters, mpMaps, helpers, tApplication, tTooltip
+  $, _, mpConfig, mpFormatters, mpMaps, helpers, tApplication, tTooltip
   ) {
 
   // Constructor for app
@@ -67,87 +67,44 @@ define('minnpost-hennepin-county-parcels', [
     makeMap: function() {
       var thisApp = this;
 
-      // Mapbox.js doesn't seem to play nicely with cross domain requests
-      // to our custom tilestream server (though it looks like the appropriate
-      // headers are there).  So, we use a different library for the UTF grid
-
-      // Map
-      this.map = new L.map('h-county-parcels', {
-        minZoom: this.tilejson.minzoom,
-        maxZoom: this.tilejson.maxzoom,
+      // Make map
+      this.map = L.mapbox.map('h-county-parcels', 'minnpost.map-vhjzpwel,minnpost.dojn61or,minnpost.map-dotjndlk', {
         scrollWheelZoom: false,
         trackResize: true
-      }).setView([this.tilejson.center[1], this.tilejson.center[0]], this.tilejson.center[2]);
-      this.map.removeControl(this.map.attributionControl);
-
-      // Add tooltip control
-      this.tooltip = new mpMaps.TooltipControl();
-      this.map.addControl(this.tooltip);
-
-      // Add main map
-      L.tileLayer(this.options.tilestream_base + this.options.tilestream_map +
-        '/{z}/{x}/{y}.png', {
-      }).addTo(this.map);
-
-      // Add main map grid
-      this.grid = new L.UtfGrid(this.options.tilestream_base +
-        this.options.tilestream_map + '/{z}/{x}/{y}.grid.json?callback={cb}', {
-        useJsonP: true
       });
-      this.grid.on('mouseover', function(e) {
-        e.data = thisApp.parseParcelData(e.data);
-        thisApp.tooltip.update(thisApp.tooltipTemplate({
-          format: mpFormatters,
-          data: e.data
-        }));
-      });
-      this.grid.on('mouseout', function(e) {
-        thisApp.tooltip.hide();
-      });
-      this.map.addLayer(this.grid);
 
-      // Add street overlay, limit view to when zoomed further in
-      L.tileLayer(this.options.mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png', {
-        zIndex: 100
-      }).addTo(this.map);
+      // Override the template function in Mapbox's grid control because
+      // it doesn't expose more options and Mustache is stupid
+      this.map.gridControl._template = function(format, data) {
+        if (!data) {
+          return;
+        }
 
-      // Add terrain underlay
-      L.tileLayer(this.options.mapbox_base + 'minnpost.map-vhjzpwel/{z}/{x}/{y}.png', {
-        zIndex: -100
-      }).addTo(this.map);
+        var template = this.options.template || this._layer.getTileJSON().template;
 
+        if (template) {
+          return this.options.sanitizer(
+            _.template(template, {
+              format: mpFormatters,
+              data: data
+            })
+          );
+        }
+      };
 
-      // This way doesn't work with cross domain stuff, though its simpler
-      /*
-      // Override urls for Mapbox
-      L.mapbox.config.HTTP_URLS = [tilestream_base];
+      // Set new template
+      this.map.gridControl.setTemplate(tTooltip);
+      this.map.gridControl.options.pinnable = false;
 
-      // Make base map
-      this.map = L.mapbox.map('h-county-parcels', 'hennepin-parcels', {
-        minZoom: 10,
-        maxZoom: 16
-      });
-      // Remove mapbox control
+      // Remove attribution control
       this.map.removeControl(this.map.infoControl);
-
-      // Add street overlay
-      L.tileLayer(mapbox_base + 'minnpost.map-dotjndlk/{z}/{x}/{y}.png', {
-        zIndex: 100,
-        minZoom: 12
-      }).addTo(this.map);
-
-      // Add terrain underlay
-      L.tileLayer(mapbox_base + 'minnpost.map-vhjzpwel/{z}/{x}/{y}.png', {
-        zIndex: -100
-      }).addTo(this.map);
-      */
 
       // For whatever reason, the map may not load complete, probably
       // due to the face that the DOM element for it is not
       // completely loaded
       _.delay(function() {
         thisApp.map.invalidateSize();
-      }, 750);
+      }, 1500);
     },
 
     // Handle some events
