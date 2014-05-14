@@ -14748,7 +14748,7 @@ define('minnpost-hennepin-county-parcels', [
 
       // Get tilejson data
       $.ajax({
-        url: this.options.tilestream_base + this.options.tilestream_map + '.json?callback=?',
+        url: this.options.mapbox_base.replace('{s}', 'a') + 'minnpost.dojn61or' + '.json?callback=?',
         dataType: 'jsonp',
         jsonpCallback: 'mpCacheBuster',
         cache: true,
